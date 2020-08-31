@@ -1,7 +1,7 @@
 use terms::{
     Term,
     Pattern,
-    variable::Spawnable
+    variable::Family
 };
 use ta::{
     Symbol,
@@ -172,7 +172,7 @@ impl<F: Symbol + Ranked> crate::Convolution<F> for Convolution {
         automaton::state_convolution(initial_state, env)
     }
 
-    fn search<'a, 'e, Q: State, X: 'a + Spawnable>(automata: &'a [&'e Automaton<Rank<Convoluted<F>>, Q, NoLabel>], patterns: Vec<Convoluted<Pattern<F, X>>>, kill_signal: crossbeam_channel::Receiver<()>) -> Box<dyn Iterator<Item = Result<Vec<Term<Rank<Convoluted<F>>>>, Killed>> + 'a> {
+    fn search<'a, 'e, Q: State, X: 'a + Family + Ord>(automata: &'a [&'e Automaton<Rank<Convoluted<F>>, Q, NoLabel>], patterns: Vec<Convoluted<Pattern<F, X>>>, kill_signal: Option<crossbeam_channel::Receiver<()>>) -> Box<dyn Iterator<Item = Result<Vec<Term<Rank<Convoluted<F>>>>, Killed>> + 'a> {
         Box::new(multi_search(automata, patterns, kill_signal))
     }
 }

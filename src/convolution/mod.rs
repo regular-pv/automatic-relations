@@ -1,7 +1,7 @@
 use terms::{
     Term,
     Pattern,
-    variable::Spawnable
+    variable::Family
 };
 use ta::{
     Symbol,
@@ -44,5 +44,5 @@ pub trait Convolution<F: Symbol> {
 
     fn state_convolution<E, Q: LanguageState<F, E>>(initial_state: Convoluted<Q>, env: &E) -> Automaton<Rank<Convoluted<F>>, Convoluted<Q>, NoLabel>;
 
-    fn search<'a, 'e, Q: State, X: 'a + Spawnable>(automata: &'a [&'e Automaton<Rank<Convoluted<F>>, Q, NoLabel>], patterns: Vec<Convoluted<Pattern<F, X>>>, kill_signal: crossbeam_channel::Receiver<()>) -> Box<dyn Iterator<Item = Result<Vec<Term<Rank<Convoluted<F>>>>, Killed>> + 'a>;
+    fn search<'a, 'e, Q: State, X: 'a + Family + Ord + Clone>(automata: &'a [&'e Automaton<Rank<Convoluted<F>>, Q, NoLabel>], patterns: Vec<Convoluted<Pattern<F, X>>>, kill_signal: Option<crossbeam_channel::Receiver<()>>) -> Box<dyn Iterator<Item = Result<Vec<Term<Rank<Convoluted<F>>>>, Killed>> + 'a>;
 }

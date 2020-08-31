@@ -8,7 +8,16 @@ use std::cell::Cell;
 use std::cmp::Ord;
 use std::fmt;
 use std::collections::HashSet;
-use terms::{Term, Pattern, Var, variable::Spawnable};
+use terms::{
+	Term,
+	Pattern,
+	Var,
+	variable::{
+		Spawnable,
+		Family,
+		Parented
+	}
+};
 use ta::{
     Symbol,
     State,
@@ -50,16 +59,18 @@ impl<'a, T: fmt::Display> fmt::Display for PList<'a, T> {
     }
 }
 
-fn assert_multi_search<F: Ranked + Symbol + Ord, Q: State, X: Spawnable>(automata: &[&Automaton<Rank<Convoluted<F>>, Q, NoLabel>], mut patterns: Vec<Vec<Pattern<F, X>>>, mut expected_output: Vec<Vec<Term<Rank<Convoluted<F>>>>>) {
+fn assert_multi_search<F: Ranked + Symbol + Ord, Q: State, X: Family + Ord>(automata: &[&Automaton<Rank<Convoluted<F>>, Q, NoLabel>], mut patterns: Vec<Vec<Pattern<F, X>>>, mut expected_output: Vec<Vec<Term<Rank<Convoluted<F>>>>>) {
     // prepare the patterns.
     let convoluted_patterns = patterns.drain(..).map(|patterns| {
         Convoluted(patterns.into_iter().map(|p| MaybeBottom::Some(p)).collect())
     }).collect();
 
-    let it = aligned::multi_search(automata, convoluted_patterns);
+    let it = aligned::multi_search(automata, convoluted_patterns, None);
 
     let mut output: Vec<Vec<Term<Rank<Convoluted<F>>>>> = Vec::with_capacity(expected_output.len());
     for terms in it {
+		let terms = terms.unwrap();
+
         #[cfg(debug_assertions)]
         {
             if output.len() >= expected_output.len() {
@@ -147,7 +158,7 @@ fn main() {
     };
 
     let namespace = Cell::new(0);
-    let x = Var::spawn(&&namespace);
+    let x: Parented<Var<_>> = Parented::spawn(&&namespace);
 
     assert_multi_search(
         &[&prop_all_false, &prop_sorted],
