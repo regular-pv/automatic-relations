@@ -377,27 +377,25 @@ impl<'a, T: fmt::Display> fmt::Display for PList<'a, T> {
 	}
 }
 
-// impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Display for SearchContextData<F, Q, X> {
-// 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-// 		// if let Some(parent) = &self.parent {
-// 		// 	write!(f, "{}", parent)?;
-// 		// }
-// 		//
-// 		// for (x, (sym, vars)) in self.table.iter() {
-// 		// 	write!(f, "{}: {}({}), ", x, sym, PList(vars))?;
-// 		// }
-//
-// 		// TODO
-//
-// 		Ok(())
-// 	}
-// }
-//
-// impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Debug for SearchContextData<F, Q, X> {
-// 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-// 		fmt::Display::fmt(self, f)
-// 	}
-// }
+impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Display for SearchContextData<F, Q, X> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		for (x, (sym, vars)) in self.bindings.iter() {
+			write!(f, "{}: {}({}), ", x, sym, PList(vars))?;
+		}
+
+		if let Some(parent) = &self.parent {
+			write!(f, " < {}", parent)?;
+		}
+
+		Ok(())
+	}
+}
+
+impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Debug for SearchContextData<F, Q, X> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		fmt::Display::fmt(self, f)
+	}
+}
 
 #[derive(Clone)]
 pub struct SearchContext<F: Symbol, Q: State, X: Family + Ord + Clone> {
@@ -422,17 +420,17 @@ impl<F: Symbol, Q: State, X: Family + Ord + Clone> ta::bottom_up::width_search::
 	}
 }
 
-// impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Debug for SearchContext<F, Q, X> {
-// 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-// 		fmt::Debug::fmt(&self.p, f)
-// 	}
-// }
-//
-// impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Display for SearchContext<F, Q, X> {
-// 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-// 		fmt::Display::fmt(&self.p, f)
-// 	}
-// }
+impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Debug for SearchContext<F, Q, X> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		fmt::Debug::fmt(&self.p, f)
+	}
+}
+
+impl<F: Symbol + fmt::Display, Q: State + fmt::Display, X: Family + Ord + Clone + fmt::Display> fmt::Display for SearchContext<F, Q, X> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		fmt::Display::fmt(&self.p, f)
+	}
+}
 
 impl<F: Symbol, Q: State, X: Family + Ord + Clone> SearchContext<F, Q, X> {
 	fn new(depth: usize) -> SearchContext<F, Q, X> {
