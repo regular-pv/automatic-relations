@@ -1,6 +1,6 @@
 [package]
 name = "automatic-relations"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Timothée Haudebourg <timothee.haudebourg@irisa.fr>"]
 edition = "2018"
 categories = ["data-structures", "science"]
@@ -12,9 +12,9 @@ license = "MIT/Apache-2.0"
 readme = "README.md"
 
 [dependencies]
-terms = "0.1.2"
-tree-automata = "0.1.1"
-crossbeam-channel = "0.3.9"
-immutable-map = "0.1.2"
-union-find = "0.3.2"
-once_cell = "1.4.1"
+terms = "^0.1"
+tree-automata = "^0.1"
+crossbeam-channel = "^0.3"
+immutable-map = "^0.1"
+union-find = "^0.3"
+once_cell = "^1.4"
